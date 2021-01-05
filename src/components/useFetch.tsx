@@ -24,7 +24,7 @@ export const useFetch = (props: Props) => {
       .then((response) => response.json())
       .then((d) => {
         setState({ data: d, loading: false });
-        console.log(d[0]);
+        // console.log(d[0]);
       });
 
     // axios.get(props.url).then((response) => {

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 interface Props {
   singleData: any;
@@ -7,22 +7,36 @@ interface Props {
 const Question = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
 
-  useEffect(() => {
-    if (tableRef && tableRef.current) {
-      var answers: any = tableRef.current.getElementsByTagName("input");
-      for (var i = 0; i < answers.length; i++) {
-        // eslint-disable-next-line no-loop-func
-        const current = answers[i];
-        current.onclick = () => {
-          for (var j = 0; j < answers.length; j++) {
-            if (answers[j] !== current && current.checked) {
-              answers[j].checked = false;
-            }
-          }
-        };
-      }
+  const [selection, setSelection] = useState([]);
+  const currentSelection: boolean[] = [];
 
-      // Add some styles
+  // Uncheck other options if it doesn't have multiple correct answers
+  useEffect(() => {
+    if (props.singleData.multiple_correct_answers === false)
+      if (tableRef && tableRef.current) {
+        var answers: any = tableRef.current.getElementsByTagName("input");
+        for (var i = 0; i < answers.length; i++) {
+          const current = answers[i];
+          current.onclick = () => {
+            for (var j = 0; j < answers.length; j++) {
+              if (answers[j] !== current && current.checked) {
+                answers[j].checked = false;
+              }
+            }
+          };
+        }
+      }
+    // After Loaded:
+    // Save all the current answers selection
+    if (props.singleData.answers) {
+      let counter = 0;
+      Object.keys(props.singleData.answers).map((key) => {
+        console.log(key);
+
+        currentSelection[counter] = false;
+        counter++;
+      });
+      console.log(currentSelection);
     }
   }, [props.singleData]);
 
@@ -44,32 +58,38 @@ const Question = (props: Props) => {
           <h3>{props.singleData.question}</h3>
           <form>
             <table ref={tableRef}>
-              {Object.keys(props.singleData.answers).map(
-                (key) =>
-                  props.singleData.answers[key] && (
-                    <tr key={props.singleData.answers[key]}>
-                      <td
+              <tbody>
+                {Object.keys(props.singleData.answers).map(
+                  (key) =>
+                    props.singleData.answers[key] && (
+                      <tr
+                        key={props.singleData.answers[key]}
                         onClick={() =>
                           handleSelection(
                             "input-" + props.singleData.answers[key]
                           )
                         }
                       >
-                        {" "}
-                        <div className="answer">
-                          <input
-                            type="radio"
-                            value={key}
-                            className={"input-" + props.singleData.answers[key]}
-                          />
-                          <label className="answer-text">
-                            {props.singleData.answers[key]}
-                          </label>{" "}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-              )}
+                        <td>
+                          <div className="answer">
+                            <input
+                              type="checkbox"
+                              value={key}
+                              className={
+                                "input-" + props.singleData.answers[key]
+                              }
+                              onChange={() => console.log("changed")}
+                              checked={true}
+                            />
+                            <label className="answer-text">
+                              {props.singleData.answers[key]}
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                )}
+              </tbody>
             </table>
           </form>
         </div>
