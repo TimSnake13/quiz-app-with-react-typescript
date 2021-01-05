@@ -26,35 +26,55 @@ const Question = (props: Props) => {
     }
   }, [props.singleData]);
 
-  function handleSelection() {
-    console.log("Clicked");
+  function handleSelection(name: string) {
+    if (tableRef && tableRef.current) {
+      const el = tableRef.current.getElementsByClassName(
+        name
+      )[0] as HTMLInputElement;
+      el.click();
+    }
   }
 
   return (
-    <div>
+    <>
       {!props.singleData ? (
         <></>
       ) : (
         <div>
           <h3>{props.singleData.question}</h3>
-          <table ref={tableRef}>
-            {Object.keys(props.singleData.answers).map(
-              (key) =>
-                props.singleData.answers[key] && (
-                  <div className="answer">
+          <form>
+            <table ref={tableRef}>
+              {Object.keys(props.singleData.answers).map(
+                (key) =>
+                  props.singleData.answers[key] && (
                     <tr key={props.singleData.answers[key]}>
-                      <td onClick={handleSelection}>
-                        <input type="checkbox" value={key} />
-                        <label>{props.singleData.answers[key]}</label>
+                      <td
+                        onClick={() =>
+                          handleSelection(
+                            "input-" + props.singleData.answers[key]
+                          )
+                        }
+                      >
+                        {" "}
+                        <div className="answer">
+                          <input
+                            type="radio"
+                            value={key}
+                            className={"input-" + props.singleData.answers[key]}
+                          />
+                          <label className="answer-text">
+                            {props.singleData.answers[key]}
+                          </label>{" "}
+                        </div>
                       </td>
                     </tr>
-                  </div>
-                )
-            )}
-          </table>
+                  )
+              )}
+            </table>
+          </form>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
