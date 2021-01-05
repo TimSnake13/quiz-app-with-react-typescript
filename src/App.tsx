@@ -1,24 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useFetch } from "./components/useFetch";
 
 function App() {
+  const url = "https://quizapi.io/api/v1/questions";
+
+  const { data, loading } = useFetch({ url: url });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      Hello App
+      {!data ? <p>Loading.....</p> : <div>Loaded</div>}
+      <button>Fetch Data</button>
     </div>
   );
 }
