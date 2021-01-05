@@ -31,14 +31,12 @@ const Question = (props: Props) => {
     if (props.singleData.answers) {
       let counter = 0;
       Object.keys(props.singleData.answers).map((key) => {
-        console.log(key);
-
-        currentSelection[counter] = false;
+        currentSelection[counter] = false; // Init
         counter++;
       });
-      console.log(currentSelection);
     }
   }, [props.singleData]);
+  // TODO: Add a submit button, then compare the answer(change the color of the element?)
 
   function handleSelection(name: string) {
     if (tableRef && tableRef.current) {
