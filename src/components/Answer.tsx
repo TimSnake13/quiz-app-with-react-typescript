@@ -14,7 +14,7 @@ const Answer = (props: Props) => {
       <input
         type="checkbox"
         value={props.answer_key}
-        className={"input-" + props.answer}
+        className={"input-" + props.answer} // Use for handleSelection Search
         onChange={() => {
           // Update stored answers
           //   props.currentSelection[props.answer_key] = !props.currentSelection[

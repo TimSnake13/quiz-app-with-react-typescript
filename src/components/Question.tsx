@@ -10,15 +10,16 @@ const Question = (props: Props) => {
   const data = props.singleData;
   const tableRef = useRef<HTMLTableElement>(null);
   const [showExplanation, setShowExplanation] = useState(false);
-  let correct: boolean[] = [];
-  let currentSelection: { [key: string]: boolean } = {}; // index signature
+  const correct: boolean[] = [];
+  const currentSelection: { [key: string]: boolean } = {}; // index signature
+  console.log("Rerunning:");
 
   useEffect(() => {
     console.log("Re render");
   }, []);
 
-  // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
+    // Uncheck other options if it doesn't have multiple correct answers
     if (data.multiple_correct_answers === "false")
       if (tableRef && tableRef.current) {
         var answers = tableRef.current.getElementsByTagName("input");
@@ -102,18 +103,18 @@ const Question = (props: Props) => {
         if (currentSelection[key] === true) {
           if (correct[j] === true) {
             StyleCorrect(div);
-            console.log("State 1");
+            // console.log("State 1");
           } else if (correct[j] === false) {
             StyleIncorrect(div);
-            console.log("State 2");
+            // console.log("State 2");
           }
         } else if (currentSelection[key] === false) {
           if (correct[j] === true) {
             StyleCorrect(div);
-            console.log("State 3");
+            // console.log("State 3");
           } else if (correct[j] === false) {
-            // Do nothing
             // console.log("State 4");
+            StyleDefault(div);
           }
         }
 
@@ -121,12 +122,15 @@ const Question = (props: Props) => {
 
         return null;
       });
-    } else {
-      console.error("Correct Answer not stored!");
     }
-    setShowExplanation(true);
-    console.log("After submit correct: ");
-    console.log(correct);
+    // setShowExplanation(true); // Trigger rerender
+  }
+
+  function StyleDefault(el: HTMLDivElement) {
+    if (el) {
+      el.style.backgroundColor = "#d6d3d1";
+      //   el.parentElement?.appendChild(FaRegCheckCircle);
+    }
   }
 
   function StyleCorrect(el: HTMLDivElement) {
