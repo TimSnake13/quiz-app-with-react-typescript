@@ -7,12 +7,13 @@ interface Props {
 const Question = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
 
-  const currentSelection: boolean[] = [];
+  let currentSelection: { [key: string]: boolean } = {}; // index signature
   let answerIdx = 0; // To assign & keep track of answers value
 
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
-    if (props.singleData.multiple_correct_answers === false)
+    const data = props.singleData;
+    if (data.multiple_correct_answers === false)
       if (tableRef && tableRef.current) {
         answerIdx = 0; // reset index
         var answers: any = tableRef.current.getElementsByTagName("input");
@@ -29,11 +30,11 @@ const Question = (props: Props) => {
       }
     // After Loaded:
     // Save all the current answers selection
-    if (props.singleData.answers) {
+    if (data.answers) {
       let counter = 0;
-      Object.keys(props.singleData.answers).map((key) => {
-        if (props.singleData.answers[key]) {
-          currentSelection[counter] = false; // Init
+      Object.keys(data.answers).map((key) => {
+        if (data.answers[key]) {
+          currentSelection[key] = false;
           counter++;
         }
       });
@@ -72,8 +73,12 @@ const Question = (props: Props) => {
                               className={
                                 "input-" + props.singleData.answers[key]
                               }
-                              onChange={() => console.log(currentSelection)}
-                              checked={currentSelection[answerIdx]}
+                              onChange={() => {
+                                // Update stored answers
+                                currentSelection[key] = !currentSelection[key];
+                                console.log(currentSelection);
+                              }}
+                              checked={currentSelection[key]}
                             />
                             <label className="answer-text">
                               {props.singleData.answers[key]}
