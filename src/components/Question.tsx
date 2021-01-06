@@ -66,17 +66,35 @@ const Question = (props: Props) => {
       let j = 0;
       Object.keys(data.answers).map((key) => {
         if (currentSelection[key]) {
+          // An Answer can have 4 states:
+          // 1. user selected, and it's "true"                               => style green
+          // 2. user selected, and it's "false"                              => style red
+          // 3. user didn't select, and it's "true" (need to selected)       => style red
+          // 3. user didn't select, and it's "false" (need to selected)      => style default
           if (currentSelection[key] !== correct[j]) {
             // console.log("CS: " + currentSelection[key]);
             // console.log("C[" + j + "]: " + correct[j]);
             // console.log("Incorrect Answer Index: " + j);
             // console.log(data);
             setShowExplanation(true);
-          } else if (currentSelection[key] === true) {
+            console.log("false");
+            // if incorrect, set to red
             if (tableRef && tableRef.current) {
               const el = tableRef.current.getElementsByClassName(
-                key
-              )[0] as HTMLInputElement;
+                "answer " + data.answers[key]
+              )[0] as HTMLDivElement;
+              // el.style = {{background-color: "black"}}
+              if (el) el.style.backgroundColor = "red";
+            }
+          } else if (currentSelection[key] === true) {
+            console.log("true");
+            // if selected is correct, set to green
+            if (tableRef && tableRef.current) {
+              const el = tableRef.current.getElementsByClassName(
+                "answer " + data.answers[key]
+              )[0] as HTMLDivElement;
+              // el.style = {{background-color: "black"}}
+              if (el) el.style.backgroundColor = "green";
             }
           }
           j++;
@@ -103,7 +121,7 @@ const Question = (props: Props) => {
                   data.answers[key] && (
                     <tr key={data.answers[key]}>
                       <td>
-                        <div className="answer">
+                        <div className={"answer " + data.answers[key]}>
                           <input
                             type="checkbox"
                             value={key}
