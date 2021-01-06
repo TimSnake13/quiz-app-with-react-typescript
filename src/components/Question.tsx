@@ -66,47 +66,44 @@ const Question = (props: Props) => {
       let j = 0;
       Object.keys(data.answers).map((key) => {
         if (currentSelection[key]) {
+          const div = tableRef?.current?.getElementsByClassName(
+            "answer " + data.answers[key]
+          )[0] as HTMLDivElement;
+
           // An Answer can have 4 states:
           // 1. user selected, and it's "true"                               => style green
           // 2. user selected, and it's "false"                              => style red
           // 3. user didn't select, and it's "true" (need to selected)       => style red
           // 3. user didn't select, and it's "false" (need to selected)      => style default
-          if (currentSelection[key] !== correct[j]) {
-            // console.log("CS: " + currentSelection[key]);
-            // console.log("C[" + j + "]: " + correct[j]);
-            // console.log("Incorrect Answer Index: " + j);
-            // console.log(data);
-            setShowExplanation(true);
-            console.log("false");
-            // if incorrect, set to red
-            if (tableRef && tableRef.current) {
-              const el = tableRef.current.getElementsByClassName(
-                "answer " + data.answers[key]
-              )[0] as HTMLDivElement;
-              // el.style = {{background-color: "black"}}
-              if (el) el.style.backgroundColor = "red";
+
+          if (currentSelection[key] === true) {
+            if (correct[j] === true) {
+              StyleCorrect(div);
+            } else if (correct[j] === false) {
+              StyleIncorrect(div);
+              setShowExplanation(true);
             }
-          } else if (currentSelection[key] === true) {
-            console.log("true");
-            // if selected is correct, set to green
-            if (tableRef && tableRef.current) {
-              const el = tableRef.current.getElementsByClassName(
-                "answer " + data.answers[key]
-              )[0] as HTMLDivElement;
-              // el.style = {{background-color: "black"}}
-              if (el) el.style.backgroundColor = "green";
+          } else if (currentSelection[key] === false) {
+            if (correct[j] === true) {
+              StyleIncorrect(div);
+              setShowExplanation(true);
+            } else if (correct[j] === false) {
+              // Do nothing
             }
           }
+
           j++;
         }
         return null;
       });
-      if (showExplanation === false) {
-        // If correct, add green to selected
-        // If incorrect, add green to right answer
-        // Add red to wrong selected
-      }
     }
+  }
+
+  function StyleCorrect(el: HTMLDivElement) {
+    if (el) el.style.backgroundColor = "green";
+  }
+  function StyleIncorrect(el: HTMLDivElement) {
+    if (el) el.style.backgroundColor = "red";
   }
 
   return (
