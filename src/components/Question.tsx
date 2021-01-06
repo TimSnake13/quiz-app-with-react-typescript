@@ -75,6 +75,8 @@ const Question = (props: Props) => {
       currentSelection[key] = !currentSelection[key];
     } else {
       console.error("currentSelection key: " + key + " doesn't exist!");
+      console.error("Current selected:");
+      console.error(currentSelection);
     }
   }
 
@@ -119,8 +121,12 @@ const Question = (props: Props) => {
 
         return null;
       });
+    } else {
+      console.error("Correct Answer not stored!");
     }
     setShowExplanation(true);
+    console.log("After submit correct: ");
+    console.log(correct);
   }
 
   function StyleCorrect(el: HTMLDivElement) {

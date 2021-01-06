@@ -1,3 +1,10 @@
+.flex-center {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .answer {
   background-color: #d6d3d1;
   border-radius: 4px;

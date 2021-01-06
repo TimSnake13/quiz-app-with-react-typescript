@@ -8,7 +8,7 @@ const QA = () => {
   const { data, loading } = useFetch({ url: url });
 
   return (
-    <div>
+    <div className="flex-center">
       {!data ? (
         <p>Loading.....</p>
       ) : (
