@@ -7,13 +7,14 @@ interface Props {
 const Question = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
 
-  const [selection, setSelection] = useState([]);
   const currentSelection: boolean[] = [];
+  let answerIdx = 0; // To assign & keep track of answers value
 
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
     if (props.singleData.multiple_correct_answers === false)
       if (tableRef && tableRef.current) {
+        answerIdx = 0; // reset index
         var answers: any = tableRef.current.getElementsByTagName("input");
         for (var i = 0; i < answers.length; i++) {
           const current = answers[i];
@@ -60,14 +61,7 @@ const Question = (props: Props) => {
                 {Object.keys(props.singleData.answers).map(
                   (key) =>
                     props.singleData.answers[key] && (
-                      <tr
-                        key={props.singleData.answers[key]}
-                        onClick={() =>
-                          handleSelection(
-                            "input-" + props.singleData.answers[key]
-                          )
-                        }
-                      >
+                      <tr key={props.singleData.answers[key]}>
                         <td>
                           <div className="answer">
                             <input
@@ -77,11 +71,19 @@ const Question = (props: Props) => {
                                 "input-" + props.singleData.answers[key]
                               }
                               onChange={() => console.log("changed")}
-                              checked={true}
+                              checked={currentSelection[answerIdx]}
                             />
                             <label className="answer-text">
                               {props.singleData.answers[key]}
                             </label>
+                            <div
+                              className="answer-clickable"
+                              onClick={() =>
+                                handleSelection(
+                                  "input-" + props.singleData.answers[key]
+                                )
+                              }
+                            ></div>
                           </div>
                         </td>
                       </tr>
