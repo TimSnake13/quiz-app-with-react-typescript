@@ -6,9 +6,14 @@ interface Props {
   currentSelection: any;
   toggleCurrentSelection: (key: string) => void;
   handleSelection: (name: string) => void;
+  clickable: boolean;
 }
 
 const Answer = (props: Props) => {
+  const cursorPointer = {
+    cursor: "pointer",
+  };
+
   return (
     <>
       <input
@@ -27,7 +32,12 @@ const Answer = (props: Props) => {
       <label className="answer-text">{props.answer}</label>
       <div
         className="answer-clickable"
-        onClick={() => props.handleSelection("input-" + props.answer)}
+        style={props.clickable ? cursorPointer : undefined}
+        onClick={() =>
+          props.clickable
+            ? props.handleSelection("input-" + props.answer)
+            : null
+        }
       ></div>
     </>
   );

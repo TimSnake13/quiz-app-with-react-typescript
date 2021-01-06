@@ -8,17 +8,19 @@ const QA = () => {
   const { data, loading } = useFetch({ url: url });
 
   return (
-    <div className="flex-center">
-      {!data ? (
-        <p>Loading.....</p>
-      ) : (
-        <div>
-          Loaded:
+    <div>
+      <div>
+        {!data ? (
+          <p>Loading.....</p>
+        ) : (
           <div>
-            <Question singleData={data[0]} />
+            Loaded:
+            <div className="flex-center">
+              <Question singleData={data[0]} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

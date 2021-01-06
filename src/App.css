@@ -1,8 +1,23 @@
-.flex-center {
+p {
+  max-width: 380px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.min-height {
   min-height: 80vh;
+}
+
+.flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.flex-center .column {
+  flex-direction: column;
 }
 
 .answer {

@@ -10,13 +10,9 @@ const Question = (props: Props) => {
   const data = props.singleData;
   const tableRef = useRef<HTMLTableElement>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+
   const correct: boolean[] = [];
   const currentSelection: { [key: string]: boolean } = {}; // index signature
-  console.log("Rerunning:");
-
-  useEffect(() => {
-    console.log("Re render");
-  }, []);
 
   useEffect(() => {
     // Uncheck other options if it doesn't have multiple correct answers
@@ -81,9 +77,6 @@ const Question = (props: Props) => {
     }
   }
 
-  // FIXME: After submit, currentSelection will somehow reset, don't know why
-  // Once you selected the wrong answer, currentSelection will reset.
-  // But not the case if you choose the right one first *sometimes*
   function submitAnswers() {
     // e.preventDefault();
     if (correct) {
@@ -123,13 +116,12 @@ const Question = (props: Props) => {
         return null;
       });
     }
-    // setShowExplanation(true); // Trigger rerender
+    setShowExplanation(true); // Trigger rerender
   }
 
   function StyleDefault(el: HTMLDivElement) {
     if (el) {
-      el.style.backgroundColor = "#d6d3d1";
-      //   el.parentElement?.appendChild(FaRegCheckCircle);
+      el.style.backgroundColor = "#d6d3d1"; // Don't Forget to change the color in App.css
     }
   }
 
@@ -148,17 +140,7 @@ const Question = (props: Props) => {
   return (
     <>
       {data && (
-        <div>
-          <div>
-            Data.answer:
-            {Object.keys(data.correct_answers).map((key) => (
-              <div key={key}>
-                <div>
-                  {key} : {data.correct_answers[key]}
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="min-height flex-center column">
           <h3>{data.question}</h3>
           <table ref={tableRef}>
             <tbody>
@@ -174,6 +156,7 @@ const Question = (props: Props) => {
                             currentSelection={currentSelection}
                             toggleCurrentSelection={toggleCurrentSelection}
                             handleSelection={handleSelection}
+                            clickable={true}
                           />
                         </div>
                       </td>
@@ -181,6 +164,16 @@ const Question = (props: Props) => {
                   )
               )}
             </tbody>
+            <div className="flex-center">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  submitAnswers();
+                }}
+              >
+                Submit
+              </button>
+            </div>
           </table>
           <div>
             {showExplanation && (
@@ -200,14 +193,6 @@ const Question = (props: Props) => {
                 )}
               </div>
             )}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                submitAnswers();
-              }}
-            >
-              Submit
-            </button>
           </div>
         </div>
       )}
