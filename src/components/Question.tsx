@@ -5,6 +5,7 @@ interface Props {
 }
 
 const Question = (props: Props) => {
+  const data = props.singleData;
   const tableRef = useRef<HTMLTableElement>(null);
   const [showExplanation, setShowExplanation] = useState(false);
 
@@ -12,7 +13,6 @@ const Question = (props: Props) => {
 
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
-    const data = props.singleData;
     if (data.multiple_correct_answers === "false")
       if (tableRef && tableRef.current) {
         var answers = tableRef.current.getElementsByTagName("input");
@@ -24,7 +24,6 @@ const Question = (props: Props) => {
                 answers[j].checked = false;
               }
             }
-            console.log("Trigger");
           };
         }
       }
@@ -38,7 +37,7 @@ const Question = (props: Props) => {
         return null;
       });
     }
-  }, [props.singleData]);
+  }, [data]);
 
   function handleSelection(name: string) {
     if (tableRef && tableRef.current) {
@@ -49,8 +48,7 @@ const Question = (props: Props) => {
     }
   }
 
-  function checkAnswers() {
-    const data = props.singleData;
+  function submitAnswers() {
     const correct: boolean[] = [];
     let i = 0;
     if (data.correct_answers) {
@@ -64,9 +62,6 @@ const Question = (props: Props) => {
         return null;
       });
 
-      console.log(correct);
-      console.log(typeof correct[0]);
-
       // Start compare:
       let j = 0;
       Object.keys(data.answers).map((key) => {
@@ -77,33 +72,42 @@ const Question = (props: Props) => {
             // console.log("Incorrect Answer Index: " + j);
             // console.log(data);
             setShowExplanation(true);
+          } else if (currentSelection[key] === true) {
+            if (tableRef && tableRef.current) {
+              const el = tableRef.current.getElementsByClassName(
+                key
+              )[0] as HTMLInputElement;
+            }
           }
           j++;
         }
         return null;
       });
+      if (showExplanation === false) {
+        // If correct, add green to selected
+        // If incorrect, add green to right answer
+        // Add red to wrong selected
+      }
     }
   }
 
   return (
     <>
-      {!props.singleData ? (
-        <></>
-      ) : (
+      {data && (
         <div>
-          <h3>{props.singleData.question}</h3>
+          <h3>{data.question}</h3>
           <table ref={tableRef}>
             <tbody>
-              {Object.keys(props.singleData.answers).map(
+              {Object.keys(data.answers).map(
                 (key) =>
-                  props.singleData.answers[key] && (
-                    <tr key={props.singleData.answers[key]}>
+                  data.answers[key] && (
+                    <tr key={data.answers[key]}>
                       <td>
                         <div className="answer">
                           <input
                             type="checkbox"
                             value={key}
-                            className={"input-" + props.singleData.answers[key]}
+                            className={"input-" + data.answers[key]}
                             onChange={() => {
                               // Update stored answers
                               currentSelection[key] = !currentSelection[key];
@@ -111,14 +115,12 @@ const Question = (props: Props) => {
                             checked={currentSelection[key]}
                           />
                           <label className="answer-text">
-                            {props.singleData.answers[key]}
+                            {data.answers[key]}
                           </label>
                           <div
                             className="answer-clickable"
                             onClick={() =>
-                              handleSelection(
-                                "input-" + props.singleData.answers[key]
-                              )
+                              handleSelection("input-" + data.answers[key])
                             }
                           ></div>
                         </div>
@@ -133,8 +135,8 @@ const Question = (props: Props) => {
               // This api have mostly none explanation
               <div>
                 <h4>Explanation: </h4>
-                {props.singleData.explanation ? (
-                  <p>{props.singleData.explanation}</p>
+                {data.explanation ? (
+                  <p>{data.explanation}</p>
                 ) : (
                   <p>
                     Lorem Ipsum is simply dummy text of the printing and
@@ -146,7 +148,7 @@ const Question = (props: Props) => {
                 )}
               </div>
             )}
-            <button onClick={checkAnswers}>Submit</button>
+            <button onClick={submitAnswers}>Submit</button>
           </div>
         </div>
       )}
