@@ -31,6 +31,15 @@ const Question = (props: Props) => {
   }, [data.correct_answers]);
 
   const currentSelection: { [key: string]: boolean } = {}; // index signature
+  // currentSelection init:
+  if (data.answers) {
+    Object.keys(data.answers).map((key) => {
+      if (data.answers[key]) {
+        currentSelection[key] = false;
+      }
+      return null;
+    });
+  }
 
   useEffect(() => {
     // Uncheck other options if it doesn't have multiple correct answers
