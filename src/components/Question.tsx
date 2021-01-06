@@ -8,14 +8,12 @@ const Question = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
 
   let currentSelection: { [key: string]: boolean } = {}; // index signature
-  let answerIdx = 0; // To assign & keep track of answers value
 
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
     const data = props.singleData;
     if (data.multiple_correct_answers === false)
       if (tableRef && tableRef.current) {
-        answerIdx = 0; // reset index
         var answers: any = tableRef.current.getElementsByTagName("input");
         for (var i = 0; i < answers.length; i++) {
           const current = answers[i];
@@ -31,11 +29,9 @@ const Question = (props: Props) => {
     // After Loaded:
     // Save all the current answers selection
     if (data.answers) {
-      let counter = 0;
       Object.keys(data.answers).map((key) => {
         if (data.answers[key]) {
           currentSelection[key] = false;
-          counter++;
         }
       });
     }
