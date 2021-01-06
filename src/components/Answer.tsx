@@ -4,6 +4,7 @@ interface Props {
   answer_key: string;
   answer: string;
   currentSelection: any;
+  toggleCurrentSelection: (key: string) => void;
   handleSelection: (name: string) => void;
 }
 
@@ -16,9 +17,10 @@ const Answer = (props: Props) => {
         className={"input-" + props.answer}
         onChange={() => {
           // Update stored answers
-          props.currentSelection[props.answer_key] = !props.currentSelection[
-            props.answer_key
-          ];
+          //   props.currentSelection[props.answer_key] = !props.currentSelection[
+          //     props.answer_key
+          //   ];
+          props.toggleCurrentSelection(props.answer_key);
           console.log("Current selected:");
           console.log(props.currentSelection);
         }}

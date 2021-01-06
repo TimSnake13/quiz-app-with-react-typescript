@@ -55,8 +55,10 @@ const Question = (props: Props) => {
         k++;
         return null;
       });
-      console.log(correct);
     }
+
+    // if new question:
+    setShowExplanation(false);
   }, [data]);
 
   function handleSelection(name: string) {
@@ -68,49 +70,57 @@ const Question = (props: Props) => {
     }
   }
 
+  function toggleCurrentSelection(key: string) {
+    if (currentSelection[key] === true || currentSelection[key] === false) {
+      currentSelection[key] = !currentSelection[key];
+    } else {
+      console.error("currentSelection key: " + key + " doesn't exist!");
+    }
+  }
+
   // FIXME: After submit, currentSelection will somehow reset, don't know why
+  // Once you selected the wrong answer, currentSelection will reset.
+  // But not the case if you choose the right one first *sometimes*
   function submitAnswers() {
     // e.preventDefault();
     if (correct) {
       // Start compare:
       let j = 0;
       Object.keys(data.answers).map((key) => {
-        if (currentSelection[key]) {
-          const div = tableRef?.current?.getElementsByClassName(
-            "answer " + data.answers[key]
-          )[0] as HTMLDivElement;
+        const div = tableRef?.current?.getElementsByClassName(
+          "answer " + data.answers[key]
+        )[0] as HTMLDivElement;
 
-          // An Answer can have 4 states:
-          // 1. user selected, and it's "true"                               => style green
-          // 2. user selected, and it's "false"                              => style red
-          // 3. user didn't select, and it's "true" (need to selected)       => style red
-          // 3. user didn't select, and it's "false" (need to selected)      => style default
+        // An Answer can have 4 states:
+        // 1. user selected, and it's "true"                               => style green
+        // 2. user selected, and it's "false"                              => style red
+        // 3. user didn't select, and it's "true" (need to selected)       => style green
+        // 4. user didn't select, and it's "false"                         => style default
 
-          if (currentSelection[key] === true) {
-            if (correct[j] === true) {
-              StyleCorrect(div);
-              console.log("State 1");
-            } else if (correct[j] === false) {
-              StyleIncorrect(div);
-              setShowExplanation(true);
-              console.log("State 2");
-            }
-          } else if (currentSelection[key] === false) {
-            if (correct[j] === true) {
-              StyleIncorrect(div);
-              setShowExplanation(true);
-              console.log("State 3");
-            } else if (correct[j] === false) {
-              // Do nothing
-              console.log("State 4");
-            }
+        if (currentSelection[key] === true) {
+          if (correct[j] === true) {
+            StyleCorrect(div);
+            console.log("State 1");
+          } else if (correct[j] === false) {
+            StyleIncorrect(div);
+            console.log("State 2");
           }
-
-          j++;
+        } else if (currentSelection[key] === false) {
+          if (correct[j] === true) {
+            StyleCorrect(div);
+            console.log("State 3");
+          } else if (correct[j] === false) {
+            // Do nothing
+            // console.log("State 4");
+          }
         }
+
+        j++;
+
         return null;
       });
     }
+    setShowExplanation(true);
   }
 
   function StyleCorrect(el: HTMLDivElement) {
@@ -152,6 +162,7 @@ const Question = (props: Props) => {
                             answer_key={key}
                             answer={data.answers[key]}
                             currentSelection={currentSelection}
+                            toggleCurrentSelection={toggleCurrentSelection}
                             handleSelection={handleSelection}
                           />
                         </div>
