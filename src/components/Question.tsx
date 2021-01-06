@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 
 interface Props {
   singleData: any;
@@ -32,8 +32,10 @@ const Question = (props: Props) => {
     if (props.singleData.answers) {
       let counter = 0;
       Object.keys(props.singleData.answers).map((key) => {
-        currentSelection[counter] = false; // Init
-        counter++;
+        if (props.singleData.answers[key]) {
+          currentSelection[counter] = false; // Init
+          counter++;
+        }
       });
     }
   }, [props.singleData]);
@@ -70,7 +72,7 @@ const Question = (props: Props) => {
                               className={
                                 "input-" + props.singleData.answers[key]
                               }
-                              onChange={() => console.log("changed")}
+                              onChange={() => console.log(currentSelection)}
                               checked={currentSelection[answerIdx]}
                             />
                             <label className="answer-text">
