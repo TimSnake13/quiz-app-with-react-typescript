@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import Answer from "./Answer";
 import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 interface Props {
@@ -80,16 +81,20 @@ const Question = (props: Props) => {
           if (currentSelection[key] === true) {
             if (correct[j] === true) {
               StyleCorrect(div);
+              console.log("State 1");
             } else if (correct[j] === false) {
               StyleIncorrect(div);
               setShowExplanation(true);
+              console.log("State 2");
             }
           } else if (currentSelection[key] === false) {
             if (correct[j] === true) {
               StyleIncorrect(div);
               setShowExplanation(true);
+              console.log("State 3");
             } else if (correct[j] === false) {
               // Do nothing
+              console.log("State 4");
             }
           }
 
@@ -125,25 +130,12 @@ const Question = (props: Props) => {
                     <tr key={data.answers[key]}>
                       <td>
                         <div className={"answer " + data.answers[key]}>
-                          <input
-                            type="checkbox"
-                            value={key}
-                            className={"input-" + data.answers[key]}
-                            onChange={() => {
-                              // Update stored answers
-                              currentSelection[key] = !currentSelection[key];
-                            }}
-                            checked={currentSelection[key]}
+                          <Answer
+                            answer_key={key}
+                            answer={data.answers[key]}
+                            currentSelection={currentSelection}
+                            handleSelection={handleSelection}
                           />
-                          <label className="answer-text">
-                            {data.answers[key]}
-                          </label>
-                          <div
-                            className="answer-clickable"
-                            onClick={() =>
-                              handleSelection("input-" + data.answers[key])
-                            }
-                          ></div>
                         </div>
                       </td>
                     </tr>
