@@ -19,6 +19,8 @@ const Answer = (props: Props) => {
           props.currentSelection[props.answer_key] = !props.currentSelection[
             props.answer_key
           ];
+          console.log("Current selected:");
+          console.log(props.currentSelection);
         }}
         checked={props.currentSelection[props.answer_key]}
       />

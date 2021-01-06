@@ -10,8 +10,12 @@ const Question = (props: Props) => {
   const data = props.singleData;
   const tableRef = useRef<HTMLTableElement>(null);
   const [showExplanation, setShowExplanation] = useState(false);
-
+  let correct: boolean[] = [];
   let currentSelection: { [key: string]: boolean } = {}; // index signature
+
+  useEffect(() => {
+    console.log("Re render");
+  }, []);
 
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
@@ -30,8 +34,7 @@ const Question = (props: Props) => {
           };
         }
       }
-    // After Loaded:
-    // Save all the current answers selection
+    // currentSelection init:
     if (data.answers) {
       Object.keys(data.answers).map((key) => {
         if (data.answers[key]) {
@@ -39,6 +42,20 @@ const Question = (props: Props) => {
         }
         return null;
       });
+    }
+    // Turn fetch Json to boolean array
+    if (data.correct_answers) {
+      var k = 0;
+      Object.keys(data.correct_answers).map((key) => {
+        if (data.correct_answers[key] === "true") {
+          correct[k] = true;
+        } else {
+          correct[k] = false;
+        }
+        k++;
+        return null;
+      });
+      console.log(correct);
     }
   }, [data]);
 
@@ -51,20 +68,10 @@ const Question = (props: Props) => {
     }
   }
 
+  // FIXME: After submit, currentSelection will somehow reset, don't know why
   function submitAnswers() {
-    const correct: boolean[] = [];
-    let i = 0;
-    if (data.correct_answers) {
-      Object.keys(data.correct_answers).map((key) => {
-        if (data.correct_answers[key] === "true") {
-          correct[i] = true;
-        } else {
-          correct[i] = false;
-        }
-        i++;
-        return null;
-      });
-
+    // e.preventDefault();
+    if (correct) {
       // Start compare:
       let j = 0;
       Object.keys(data.answers).map((key) => {
@@ -122,6 +129,16 @@ const Question = (props: Props) => {
     <>
       {data && (
         <div>
+          <div>
+            Data.answer:
+            {Object.keys(data.correct_answers).map((key) => (
+              <div key={key}>
+                <div>
+                  {key} : {data.correct_answers[key]}
+                </div>
+              </div>
+            ))}
+          </div>
           <h3>{data.question}</h3>
           <table ref={tableRef}>
             <tbody>
@@ -162,7 +179,14 @@ const Question = (props: Props) => {
                 )}
               </div>
             )}
-            <button onClick={submitAnswers}>Submit</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                submitAnswers();
+              }}
+            >
+              Submit
+            </button>
           </div>
         </div>
       )}
