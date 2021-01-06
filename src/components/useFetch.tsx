@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface Props {
   url: string;
@@ -10,7 +10,15 @@ interface Istate {
 }
 
 export const useFetch = (props: Props) => {
+  const isCurrent = useRef(true);
   const [state, setState] = useState<Istate>({ data: null, loading: true });
+
+  useEffect(() => {
+    return () => {
+      // Unmounted clean up
+      isCurrent.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     fetch(props.url, {
@@ -22,7 +30,7 @@ export const useFetch = (props: Props) => {
     })
       .then((response) => response.json())
       .then((d) => {
-        setState({ data: d, loading: false });
+        if (isCurrent) setState({ data: d, loading: false });
         // console.log(d[0]);
       });
 
