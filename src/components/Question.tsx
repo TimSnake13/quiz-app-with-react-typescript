@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 interface Props {
   singleData: any;
@@ -100,10 +101,15 @@ const Question = (props: Props) => {
   }
 
   function StyleCorrect(el: HTMLDivElement) {
-    if (el) el.style.backgroundColor = "green";
+    if (el) {
+      el.style.backgroundColor = "green";
+      //   el.parentElement?.appendChild(FaRegCheckCircle);
+    }
   }
   function StyleIncorrect(el: HTMLDivElement) {
-    if (el) el.style.backgroundColor = "red";
+    if (el) {
+      el.style.backgroundColor = "red";
+    }
   }
 
   return (
