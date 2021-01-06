@@ -47,6 +47,38 @@ const Question = (props: Props) => {
     }
   }
 
+  function checkAnswers() {
+    const data = props.singleData;
+    const correct: boolean[] = [];
+    let i = 0;
+    if (data.correct_answers) {
+      Object.keys(data.correct_answers).map((key) => {
+        if (data.correct_answers[key] == "true") {
+          correct[i] = true;
+        } else {
+          correct[i] = false;
+        }
+        i++;
+      });
+
+      console.log(correct);
+      console.log(typeof correct[0]);
+
+      // Start compare:
+      let j = 0;
+      Object.keys(data.answers).map((key) => {
+        if (currentSelection[key]) {
+          if (currentSelection[key] !== correct[j]) {
+            console.log("CS: " + currentSelection[key]);
+            console.log("C[" + j + "]: " + correct[j]);
+            console.log("Incorrect Answer Index: " + j);
+          }
+          j++;
+        }
+      });
+    }
+  }
+
   return (
     <>
       {!props.singleData ? (
@@ -54,47 +86,45 @@ const Question = (props: Props) => {
       ) : (
         <div>
           <h3>{props.singleData.question}</h3>
-          <form>
-            <table ref={tableRef}>
-              <tbody>
-                {Object.keys(props.singleData.answers).map(
-                  (key) =>
-                    props.singleData.answers[key] && (
-                      <tr key={props.singleData.answers[key]}>
-                        <td>
-                          <div className="answer">
-                            <input
-                              type="checkbox"
-                              value={key}
-                              className={
+          <table ref={tableRef}>
+            <tbody>
+              {Object.keys(props.singleData.answers).map(
+                (key) =>
+                  props.singleData.answers[key] && (
+                    <tr key={props.singleData.answers[key]}>
+                      <td>
+                        <div className="answer">
+                          <input
+                            type="checkbox"
+                            value={key}
+                            className={"input-" + props.singleData.answers[key]}
+                            onChange={() => {
+                              // Update stored answers
+                              currentSelection[key] = !currentSelection[key];
+                            }}
+                            checked={currentSelection[key]}
+                          />
+                          <label className="answer-text">
+                            {props.singleData.answers[key]}
+                          </label>
+                          <div
+                            className="answer-clickable"
+                            onClick={() =>
+                              handleSelection(
                                 "input-" + props.singleData.answers[key]
-                              }
-                              onChange={() => {
-                                // Update stored answers
-                                currentSelection[key] = !currentSelection[key];
-                                console.log(currentSelection);
-                              }}
-                              checked={currentSelection[key]}
-                            />
-                            <label className="answer-text">
-                              {props.singleData.answers[key]}
-                            </label>
-                            <div
-                              className="answer-clickable"
-                              onClick={() =>
-                                handleSelection(
-                                  "input-" + props.singleData.answers[key]
-                                )
-                              }
-                            ></div>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                )}
-              </tbody>
-            </table>
-          </form>
+                              )
+                            }
+                          ></div>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
+          <div>
+            <button onClick={checkAnswers}>Submit</button>
+          </div>
         </div>
       )}
     </>
