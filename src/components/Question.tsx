@@ -24,6 +24,7 @@ const Question = (props: Props) => {
             for (var j = 0; j < answers.length; j++) {
               if (answers[j] !== current && current.checked) {
                 answers[j].checked = false;
+                currentSelection[Object.keys(currentSelection)[j]] = false;
               }
             }
           };
