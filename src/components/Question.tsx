@@ -13,9 +13,9 @@ const Question = (props: Props) => {
   // Uncheck other options if it doesn't have multiple correct answers
   useEffect(() => {
     const data = props.singleData;
-    if (data.multiple_correct_answers === false)
+    if (data.multiple_correct_answers === "false")
       if (tableRef && tableRef.current) {
-        var answers: any = tableRef.current.getElementsByTagName("input");
+        var answers = tableRef.current.getElementsByTagName("input");
         for (var i = 0; i < answers.length; i++) {
           const current = answers[i];
           current.onclick = () => {
@@ -24,6 +24,7 @@ const Question = (props: Props) => {
                 answers[j].checked = false;
               }
             }
+            console.log("Trigger");
           };
         }
       }
@@ -38,7 +39,6 @@ const Question = (props: Props) => {
       });
     }
   }, [props.singleData]);
-  // TODO: Add a submit button, then compare the answer(change the color of the element?)
 
   function handleSelection(name: string) {
     if (tableRef && tableRef.current) {
@@ -72,11 +72,10 @@ const Question = (props: Props) => {
       Object.keys(data.answers).map((key) => {
         if (currentSelection[key]) {
           if (currentSelection[key] !== correct[j]) {
-            // TODO: consider use data.multiple_correct_answers: false (is a string) ?
-            console.log("CS: " + currentSelection[key]);
-            console.log("C[" + j + "]: " + correct[j]);
-            console.log("Incorrect Answer Index: " + j);
-            console.log(data);
+            // console.log("CS: " + currentSelection[key]);
+            // console.log("C[" + j + "]: " + correct[j]);
+            // console.log("Incorrect Answer Index: " + j);
+            // console.log(data);
             setShowExplanation(true);
           }
           j++;
