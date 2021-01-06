@@ -4,14 +4,32 @@ import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 interface Props {
   singleData: any;
+  nextQuestion: () => void;
 }
 
 const Question = (props: Props) => {
   const data = props.singleData;
   const tableRef = useRef<HTMLTableElement>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const correct: boolean[] = [];
+  // const correct: boolean[] = [];
+  const correct = React.useMemo(() => {
+    const c: boolean[] = [];
+    if (data.correct_answers) {
+      var k = 0;
+      Object.keys(data.correct_answers).map((key) => {
+        if (data.correct_answers[key] === "true") {
+          c[k] = true;
+        } else {
+          c[k] = false;
+        }
+        k++;
+        return null;
+      });
+    }
+    return c;
+  }, [data.correct_answers]);
+
   const currentSelection: { [key: string]: boolean } = {}; // index signature
 
   useEffect(() => {
@@ -20,10 +38,10 @@ const Question = (props: Props) => {
       if (tableRef && tableRef.current) {
         var answers = tableRef.current.getElementsByTagName("input");
         for (var i = 0; i < answers.length; i++) {
-          const current = answers[i];
-          current.onclick = () => {
+          const currentEl = answers[i];
+          currentEl.onclick = () => {
             for (var j = 0; j < answers.length; j++) {
-              if (answers[j] !== current && current.checked) {
+              if (answers[j] !== currentEl && currentEl.checked) {
                 answers[j].checked = false;
                 currentSelection[Object.keys(currentSelection)[j]] = false;
               }
@@ -31,31 +49,9 @@ const Question = (props: Props) => {
           };
         }
       }
-    // currentSelection init:
-    if (data.answers) {
-      Object.keys(data.answers).map((key) => {
-        if (data.answers[key]) {
-          currentSelection[key] = false;
-        }
-        return null;
-      });
-    }
-    // Turn fetch Json to boolean array
-    if (data.correct_answers) {
-      var k = 0;
-      Object.keys(data.correct_answers).map((key) => {
-        if (data.correct_answers[key] === "true") {
-          correct[k] = true;
-        } else {
-          correct[k] = false;
-        }
-        k++;
-        return null;
-      });
-    }
 
     // if new question:
-    setShowExplanation(false);
+    setIsSubmitted(false);
   }, [data]);
 
   function handleSelection(name: string) {
@@ -116,7 +112,7 @@ const Question = (props: Props) => {
         return null;
       });
     }
-    setShowExplanation(true); // Trigger rerender
+    setIsSubmitted(true); // Trigger rerender
   }
 
   function StyleDefault(el: HTMLDivElement) {
@@ -131,6 +127,7 @@ const Question = (props: Props) => {
       //   el.parentElement?.appendChild(FaRegCheckCircle);
     }
   }
+
   function StyleIncorrect(el: HTMLDivElement) {
     if (el) {
       el.style.backgroundColor = "red";
@@ -156,7 +153,7 @@ const Question = (props: Props) => {
                             currentSelection={currentSelection}
                             toggleCurrentSelection={toggleCurrentSelection}
                             handleSelection={handleSelection}
-                            clickable={true}
+                            clickable={!isSubmitted}
                           />
                         </div>
                       </td>
@@ -164,19 +161,27 @@ const Question = (props: Props) => {
                   )
               )}
             </tbody>
-            <div className="flex-center">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  submitAnswers();
-                }}
-              >
-                Submit
-              </button>
-            </div>
           </table>
+          <div className="flex-center">
+            {isSubmitted === false ? (
+              <div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    submitAnswers();
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button onClick={props.nextQuestion}>Next Question</button>
+              </div>
+            )}
+          </div>
           <div>
-            {showExplanation && (
+            {isSubmitted && (
               // This api have mostly none explanation
               <div>
                 <h4>Explanation: </h4>

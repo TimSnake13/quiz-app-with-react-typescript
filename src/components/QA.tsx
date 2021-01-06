@@ -7,6 +7,13 @@ const QA = () => {
 
   const { data, loading } = useFetch({ url: url });
 
+  const [idx, setIdx] = React.useState(0);
+
+  const nextQuestion = () => {
+    setIdx((prev) => prev + 1);
+    console.log("Added");
+  };
+
   return (
     <div>
       <div>
@@ -16,7 +23,7 @@ const QA = () => {
           <div>
             Loaded:
             <div className="flex-center">
-              <Question singleData={data[0]} />
+              <Question singleData={data[idx]} nextQuestion={nextQuestion} />
             </div>
           </div>
         )}
