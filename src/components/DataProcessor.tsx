@@ -1,22 +1,10 @@
-function ObjToArray(obj: any) {
-  var arr: string[] = [];
-  var items: [string, string][] = Object.entries(obj);
-  for (var j = 0; j < items.length; j++) {
-    if (items[j][1]) {
-      arr[j] = items[j][1];
-    }
-  }
-  return arr;
-}
-
 class DataProcessor {
   data: any;
   currentQuestionIdx: number;
 
   allQuestions: string[];
   allAnswers: string[][];
-  allIsMultipleCorrectAnswers: boolean[];
-  allCorrectAnswers: string[][];
+  allCorrectAnswers: number[][];
   allExplanations: string[];
 
   constructor(data: any) {
@@ -25,26 +13,28 @@ class DataProcessor {
     this.allQuestions = [];
     this.allAnswers = [];
     this.allCorrectAnswers = [];
-    this.allIsMultipleCorrectAnswers = [];
     this.allExplanations = [];
   }
 
+  /** Return a string which is the current question */
   currentQuestion() {
     return this.allQuestions[this.currentQuestionIdx];
   }
+  /** Return a Array<string> which contains the current answers */
   currentAnswers() {
     return this.allAnswers[this.currentQuestionIdx];
   }
+  /** Return a Array<number> which contains the current correct answers' indexes.
+   * Remember to use currentCorrectAnswers().length > 1 to see if it has multiple correct answers
+   * Example: [0, 3] meaning the correct answers are the first and the forth answer  */
   currentCorrectAnswers() {
     return this.allCorrectAnswers[this.currentQuestionIdx];
   }
-  isMultipleCorrectAnswers() {
-    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
-  }
+
   currentExplanation() {
     return this.allExplanations[this.currentQuestionIdx];
   }
-
+  /** currentQuestionIdx++ */
   IdxIncrement() {
     this.currentQuestionIdx++;
   }
@@ -87,11 +77,18 @@ export class QuizAPIDataProcessor extends DataProcessor {
     if (data) {
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
-        this.allAnswers[i] = ObjToArray(data[i].answers);
-        this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
-        data[i].multiple_correct_answers === "true"
-          ? (this.allIsMultipleCorrectAnswers[i] = true)
-          : (this.allIsMultipleCorrectAnswers[i] = false);
+        this.allAnswers[i] = ObjValueToArray(data[i].answers);
+
+        var arr = ObjValueToArray(data[i].correct_answers);
+        var output: number[] = [];
+        for (let j = 0; j < arr.length; j++) {
+          if (arr[j] === "true") {
+            output.push(j);
+          }
+        }
+        if (!output) console.error("No correct answer in this question!");
+        this.allCorrectAnswers[i] = output;
+
         data[i].explanation
           ? (this.allExplanations[i] = data[i].explanation)
           : (this.allExplanations[i] =
@@ -129,20 +126,56 @@ export class QuizAPIDataProcessor extends DataProcessor {
 
 export class TriviaAPIDataProcessor extends DataProcessor {
   constructor(data: any) {
-    super(data); // call DataProcessor.constructor
+    super(data);
     if (data) {
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
-        this.allAnswers[i] = ObjToArray(data[i].correct_answer).concat(
-          ObjToArray(data[i].incorrect_answers)
+
+        // TODO: if data[i].correct_answer is array? Impossible?
+        // Randomized the array order because of the object structure
+        var arr = ObjValueToArray(data[i].correct_answer).concat(
+          ObjValueToArray(data[i].incorrect_answers)
         );
-        this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
-        data[i].multiple_correct_answers === "multiple"
-          ? (this.allIsMultipleCorrectAnswers[i] = true)
-          : (this.allIsMultipleCorrectAnswers[i] = false);
+        var correctAnswerIdx = getRandomInt(0, arr.length);
+        this.allAnswers[i] = array_move(arr, 0, correctAnswerIdx);
+        this.allCorrectAnswers[i] = [correctAnswerIdx];
+
         data[i].explanation =
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
       }
     }
   }
+}
+
+function ObjValueToArray(obj: any) {
+  var arr: string[] = [];
+  var items: [string, string][] = Object.entries(obj);
+  for (var j = 0; j < items.length; j++) {
+    if (items[j][1]) {
+      arr[j] = items[j][1];
+    }
+  }
+  return arr;
+}
+
+// Written By Reid. From: https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+// Usage:
+// console.log(array_move([1, 2, 3], 0, 1));
+// => returns[2, 1, 3]
+function array_move(arr: any[], old_index: number, new_index: number) {
+  if (new_index >= arr.length) {
+    var k = new_index - arr.length + 1;
+    while (k--) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr; // for testing
+}
+
+//The maximum is exclusive and the minimum is inclusive
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
 }
