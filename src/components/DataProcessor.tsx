@@ -9,6 +9,47 @@ function ObjToArray(obj: any) {
   return arr;
 }
 
+class DataProcessor {
+  data: any;
+  currentQuestionIdx: number;
+
+  allQuestions: string[];
+  allAnswers: string[][];
+  allIsMultipleCorrectAnswers: boolean[];
+  allCorrectAnswers: string[][];
+  allExplanations: string[];
+
+  constructor(data: any) {
+    this.data = data;
+    this.currentQuestionIdx = 0;
+    this.allQuestions = [];
+    this.allAnswers = [];
+    this.allCorrectAnswers = [];
+    this.allIsMultipleCorrectAnswers = [];
+    this.allExplanations = [];
+  }
+
+  currentQuestion() {
+    return this.allQuestions[this.currentQuestionIdx];
+  }
+  currentAnswers() {
+    return this.allAnswers[this.currentQuestionIdx];
+  }
+  currentCorrectAnswers() {
+    return this.allCorrectAnswers[this.currentQuestionIdx];
+  }
+  isMultipleCorrectAnswers() {
+    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
+  }
+  currentExplanation() {
+    return this.allExplanations[this.currentQuestionIdx];
+  }
+
+  IdxIncrement() {
+    this.currentQuestionIdx++;
+  }
+}
+
 // Quiz api fetch data example:
 // [
 //   {
@@ -40,24 +81,9 @@ function ObjToArray(obj: any) {
 //   },
 // ];
 
-export class QuizAPIDataProcessor {
-  data: any;
-  currentQuestionIdx: number;
-
-  allQuestions: string[];
-  allAnswers: string[][];
-  allIsMultipleCorrectAnswers: boolean[];
-  allCorrectAnswers: string[][];
-  allExplanations: string[];
-
+export class QuizAPIDataProcessor extends DataProcessor {
   constructor(data: any) {
-    this.data = data;
-    this.currentQuestionIdx = 0;
-    this.allQuestions = [];
-    this.allAnswers = [];
-    this.allCorrectAnswers = [];
-    this.allIsMultipleCorrectAnswers = [];
-    this.allExplanations = [];
+    super(data); // call DataProcessor.constructor
     if (data) {
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
@@ -72,26 +98,6 @@ export class QuizAPIDataProcessor {
               "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
       }
     }
-  }
-
-  currentQuestion() {
-    return this.allQuestions[this.currentQuestionIdx];
-  }
-  currentAnswers() {
-    return this.allAnswers[this.currentQuestionIdx];
-  }
-  currentCorrectAnswers() {
-    return this.allCorrectAnswers[this.currentQuestionIdx];
-  }
-  isMultipleCorrectAnswers() {
-    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
-  }
-  currentExplanation() {
-    return this.allExplanations[this.currentQuestionIdx];
-  }
-
-  IdxIncrement() {
-    this.currentQuestionIdx++;
   }
 }
 
@@ -121,24 +127,9 @@ export class QuizAPIDataProcessor {
 //     },
 // .....
 
-export class TriviaAPIDataProcessor {
-  data: any;
-  currentQuestionIdx: number;
-
-  allQuestions: string[];
-  allAnswers: string[][];
-  allIsMultipleCorrectAnswers: boolean[];
-  allCorrectAnswers: string[][];
-  allExplanations: string[];
-
+export class TriviaAPIDataProcessor extends DataProcessor {
   constructor(data: any) {
-    this.data = data.results;
-    this.currentQuestionIdx = 0;
-    this.allQuestions = [];
-    this.allAnswers = [];
-    this.allCorrectAnswers = [];
-    this.allIsMultipleCorrectAnswers = [];
-    this.allExplanations = [];
+    super(data); // call DataProcessor.constructor
     if (data) {
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
@@ -148,30 +139,10 @@ export class TriviaAPIDataProcessor {
         this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
         data[i].multiple_correct_answers === "multiple"
           ? (this.allIsMultipleCorrectAnswers[i] = true)
-              : (this.allIsMultipleCorrectAnswers[i] = false);
+          : (this.allIsMultipleCorrectAnswers[i] = false);
         data[i].explanation =
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
       }
     }
-  }
-
-  currentQuestion() {
-    return this.allQuestions[this.currentQuestionIdx];
-  }
-  currentAnswers() {
-    return this.allAnswers[this.currentQuestionIdx];
-  }
-  currentCorrectAnswers() {
-    return this.allCorrectAnswers[this.currentQuestionIdx];
-  }
-  isMultipleCorrectAnswers() {
-    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
-  }
-  currentExplanation() {
-    return this.allExplanations[this.currentQuestionIdx];
-  }
-
-  IdxIncrement() {
-    this.currentQuestionIdx++;
   }
 }
