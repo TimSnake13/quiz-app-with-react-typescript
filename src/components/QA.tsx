@@ -3,10 +3,8 @@ import Question from "./Question";
 import { useFetch } from "./useFetch";
 
 const QA = () => {
-  const url = "https://quizapi.io/api/v1/questions";
-
   const { data, loading } = useFetch({
-    url: url,
+    url: "https://quizapi.io/api/v1/questions",
     apiKeyName: "X-Api-Key",
     apiKeyValue: "XGwhNMAwuBENu2HVuG8kEkbAa4P9ZCwBMlB8vy55",
   });
