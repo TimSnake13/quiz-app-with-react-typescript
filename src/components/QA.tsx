@@ -5,7 +5,11 @@ import { useFetch } from "./useFetch";
 const QA = () => {
   const url = "https://quizapi.io/api/v1/questions";
 
-  const { data, loading } = useFetch({ url: url });
+  const { data, loading } = useFetch({
+    url: url,
+    apiKeyName: "X-Api-Key",
+    apiKeyValue: "XGwhNMAwuBENu2HVuG8kEkbAa4P9ZCwBMlB8vy55",
+  });
 
   const [idx, setIdx] = React.useState(0);
 
@@ -17,7 +21,7 @@ const QA = () => {
   return (
     <div>
       <div>
-        {!data ? (
+        {loading ? (
           <p>Loading.....</p>
         ) : (
           <div>

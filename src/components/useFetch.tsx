@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from "react";
 
 interface Props {
   url: string;
-  apiKey?: string;
+  apiKeyName?: string;
+  apiKeyValue?: string;
 }
 
 interface Istate {
@@ -10,7 +11,7 @@ interface Istate {
   loading: boolean;
 }
 
-export const useFetch = ({ url, apiKey }: Props) => {
+export const useFetch = ({ url, apiKeyName, apiKeyValue }: Props) => {
   const isCurrent = useRef(true);
   const [state, setState] = useState<Istate>({ data: null, loading: true });
 
@@ -22,11 +23,12 @@ export const useFetch = ({ url, apiKey }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (apiKey)
+    if (apiKeyName && apiKeyValue) {
       fetch(url, {
         method: "GET",
         headers: {
-          "X-Api-Key": "XGwhNMAwuBENu2HVuG8kEkbAa4P9ZCwBMlB8vy55",
+          [apiKeyName]: apiKeyValue,
+          // "X-Api-Key": "XGwhNMAwuBENu2HVuG8kEkbAa4P9ZCwBMlB8vy55",
           // "category": "Linux",
         },
       })
@@ -35,7 +37,7 @@ export const useFetch = ({ url, apiKey }: Props) => {
           if (isCurrent) setState({ data: d, loading: false });
           // console.log(d[0]);
         });
-    else
+    } else
       fetch(url)
         .then((response) => response.json())
         .then((d) => {
@@ -47,7 +49,7 @@ export const useFetch = ({ url, apiKey }: Props) => {
     //   console.log(response);
     //   setState({ data: response, loading: false });
     // });
-  }, [url, apiKey]);
+  }, [url, apiKeyValue, apiKeyName]);
 
   return state;
 };
