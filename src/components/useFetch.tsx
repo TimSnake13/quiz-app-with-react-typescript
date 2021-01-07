@@ -7,13 +7,16 @@ interface Props {
 }
 
 interface Istate {
-  data: any;
+  fetchData: any;
   loading: boolean;
 }
 
 export const useFetch = ({ url, apiKeyName, apiKeyValue }: Props) => {
   const isCurrent = useRef(true);
-  const [state, setState] = useState<Istate>({ data: null, loading: true });
+  const [state, setState] = useState<Istate>({
+    fetchData: null,
+    loading: true,
+  });
 
   useEffect(() => {
     return () => {
@@ -34,14 +37,14 @@ export const useFetch = ({ url, apiKeyName, apiKeyValue }: Props) => {
       })
         .then((response) => response.json())
         .then((d) => {
-          if (isCurrent) setState({ data: d, loading: false });
+          if (isCurrent) setState({ fetchData: d, loading: false });
           // console.log(d[0]);
         });
     } else
       fetch(url)
         .then((response) => response.json())
         .then((d) => {
-          if (isCurrent) setState({ data: d, loading: false });
+          if (isCurrent) setState({ fetchData: d, loading: false });
           // console.log(d[0]);
         });
 

@@ -1,7 +1,7 @@
 class DataProcessor {
   data: any;
   currentQuestionIdx: number;
-
+  isLoaded: boolean;
   allQuestions: string[];
   allAnswers: string[][];
   allCorrectAnswers: number[][];
@@ -10,6 +10,7 @@ class DataProcessor {
   constructor(data: any) {
     this.data = data;
     this.currentQuestionIdx = 0;
+    this.isLoaded = false;
     this.allQuestions = [];
     this.allAnswers = [];
     this.allCorrectAnswers = [];
@@ -37,6 +38,13 @@ class DataProcessor {
   /** currentQuestionIdx++ */
   IdxIncrement() {
     this.currentQuestionIdx++;
+  }
+  Log() {
+    console.log(this.data);
+    console.log(this);
+    console.log(this.currentQuestionIdx);
+    console.log(this.allAnswers);
+    console.log(this.allAnswers[this.currentQuestionIdx]);
   }
 }
 
@@ -75,6 +83,8 @@ export class QuizAPIDataProcessor extends DataProcessor {
   constructor(data: any) {
     super(data); // call DataProcessor.constructor
     if (data) {
+      this.isLoaded = true;
+
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
         this.allAnswers[i] = ObjValueToArray(data[i].answers);
@@ -128,6 +138,8 @@ export class TriviaAPIDataProcessor extends DataProcessor {
   constructor(data: any) {
     super(data);
     if (data) {
+      this.isLoaded = true;
+
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
 
