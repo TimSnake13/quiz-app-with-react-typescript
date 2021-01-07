@@ -1,3 +1,14 @@
+function ObjToArray(obj: any) {
+  var arr: string[] = [];
+  var items: [string, string][] = Object.entries(obj);
+  for (var j = 0; j < items.length; j++) {
+    if (items[j][1]) {
+      arr[j] = items[j][1];
+    }
+  }
+  return arr;
+}
+
 // Quiz api fetch data example:
 // [
 //   {
@@ -29,18 +40,7 @@
 //   },
 // ];
 
-function ObjToArray(obj: any) {
-  var arr: string[] = [];
-  var items: [string, string][] = Object.entries(obj);
-  for (var j = 0; j < items.length; j++) {
-    if (items[j][1]) {
-      arr[j] = items[j][1];
-    }
-  }
-  return arr;
-}
-
-export class QuizapiDataProcessor {
+export class QuizAPIDataProcessor {
   data: any;
   currentQuestionIdx: number;
 
@@ -74,7 +74,104 @@ export class QuizapiDataProcessor {
     }
   }
 
-  nextQuestion() {
+  currentQuestion() {
     return this.allQuestions[this.currentQuestionIdx];
+  }
+  currentAnswers() {
+    return this.allAnswers[this.currentQuestionIdx];
+  }
+  currentCorrectAnswers() {
+    return this.allCorrectAnswers[this.currentQuestionIdx];
+  }
+  isMultipleCorrectAnswers() {
+    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
+  }
+  currentExplanation() {
+    return this.allExplanations[this.currentQuestionIdx];
+  }
+
+  IdxIncrement() {
+    this.currentQuestionIdx++;
+  }
+}
+
+// Trivia API Example Response:
+// {
+//   "response_code": 0,
+//   "results": [
+//     {
+//       "category": "Science: Computers",
+//       "type": "multiple",
+//       "difficulty": "hard",
+//       "question": "The Harvard architecture for micro-controllers added which additional bus?",
+//       "correct_answer": "Instruction",
+//       "incorrect_answers": ["Address", "Data", "Control"]
+//     },
+//     {
+//       "category": "Science: Computers",
+//       "type": "multiple",
+//       "difficulty": "medium",
+//       "question": "On which computer hardware device is the BIOS chip located?",
+//       "correct_answer": "Motherboard",
+//       "incorrect_answers": [
+//         "Hard Disk Drive",
+//         "Central Processing Unit",
+//         "Graphics Processing Unit"
+//       ]
+//     },
+// .....
+
+export class TriviaAPIDataProcessor {
+  data: any;
+  currentQuestionIdx: number;
+
+  allQuestions: string[];
+  allAnswers: string[][];
+  allIsMultipleCorrectAnswers: boolean[];
+  allCorrectAnswers: string[][];
+  allExplanations: string[];
+
+  constructor(data: any) {
+    this.data = data.results;
+    this.currentQuestionIdx = 0;
+    this.allQuestions = [];
+    this.allAnswers = [];
+    this.allCorrectAnswers = [];
+    this.allIsMultipleCorrectAnswers = [];
+    this.allExplanations = [];
+    if (data) {
+      for (var i = 0; i < data.length; i++) {
+        this.allQuestions[i] = data[i].question;
+        this.allAnswers[i] = ObjToArray(data[i].correct_answer).concat(
+          ObjToArray(data[i].incorrect_answers)
+        );
+        this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
+        data[i].multiple_correct_answers === "multiple"
+          ? (this.allIsMultipleCorrectAnswers[i] = true)
+              : (this.allIsMultipleCorrectAnswers[i] = false);
+        data[i].explanation =
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
+      }
+    }
+  }
+
+  currentQuestion() {
+    return this.allQuestions[this.currentQuestionIdx];
+  }
+  currentAnswers() {
+    return this.allAnswers[this.currentQuestionIdx];
+  }
+  currentCorrectAnswers() {
+    return this.allCorrectAnswers[this.currentQuestionIdx];
+  }
+  isMultipleCorrectAnswers() {
+    return this.allIsMultipleCorrectAnswers[this.currentQuestionIdx];
+  }
+  currentExplanation() {
+    return this.allExplanations[this.currentQuestionIdx];
+  }
+
+  IdxIncrement() {
+    this.currentQuestionIdx++;
   }
 }
