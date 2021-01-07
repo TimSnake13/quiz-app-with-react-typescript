@@ -58,17 +58,8 @@ export class QuizapiDataProcessor {
       // Loop thought data array
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
-
-        // var d_answers: [string, string][] = [];
-        // d_answers = Object.entries(data[i].answers);
-        // var arr: string[] = [];
-        // for (var j = 0; j < d_answers.length; j++) {
-        //   if (d_answers[j][1]) {
-        //     arr[j] = d_answers[j][1];
-        //   }
-        // }
         this.allAnswers[i] = ObjToArray(data[i].answers);
-        console.log(this.allAnswers[i]);
+        this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
       }
     }
   }
