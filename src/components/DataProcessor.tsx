@@ -46,7 +46,9 @@ export class QuizapiDataProcessor {
 
   allQuestions: string[];
   allAnswers: string[][];
+  allIsMultipleCorrectAnswers: boolean[];
   allCorrectAnswers: string[][];
+  allExplanations: string[];
 
   constructor(data: any) {
     this.data = data;
@@ -54,12 +56,20 @@ export class QuizapiDataProcessor {
     this.allQuestions = [];
     this.allAnswers = [];
     this.allCorrectAnswers = [];
+    this.allIsMultipleCorrectAnswers = [];
+    this.allExplanations = [];
     if (data) {
-      // Loop thought data array
       for (var i = 0; i < data.length; i++) {
         this.allQuestions[i] = data[i].question;
         this.allAnswers[i] = ObjToArray(data[i].answers);
         this.allCorrectAnswers[i] = ObjToArray(data[i].correct_answers);
+        data[i].multiple_correct_answers === "true"
+          ? (this.allIsMultipleCorrectAnswers[i] = true)
+          : (this.allIsMultipleCorrectAnswers[i] = false);
+        data[i].explanation
+          ? (this.allExplanations[i] = data[i].explanation)
+          : (this.allExplanations[i] =
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
       }
     }
   }
