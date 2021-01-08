@@ -21,6 +21,7 @@ class DataProcessor {
   currentQuestion() {
     return this.allQuestions[this.currentQuestionIdx];
   }
+
   /** Return a Array<string> which contains the current answers */
   currentAnswers() {
     return this.allAnswers[this.currentQuestionIdx];
@@ -37,8 +38,14 @@ class DataProcessor {
   }
   /** currentQuestionIdx++ */
   IdxIncrement() {
-    this.currentQuestionIdx++;
+    return this.currentQuestionIdx++;
   }
+
+  IdxDecrement() {
+    if (this.currentQuestionIdx - 1 > 0) return this.currentQuestionIdx--;
+    return 0;
+  }
+
   Log() {
     console.log(this.data);
     console.log(this);

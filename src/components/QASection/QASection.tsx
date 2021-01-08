@@ -4,13 +4,14 @@ import Question from "./Question";
 import Answers from "./Answers";
 import SubmitAndNextSection from "./SubmitAndNextSection";
 
-const QASection = ({ data }: any) => {
+const QASection = ({ data, currIdx }: any) => {
   return (
     <>
       <FlexCenter>
         <SectionContainer>
           <Question text={data.currentQuestion()} />
           <Answers answers={data.currentAnswers()} />
+          {/* <Answers answers={data.getQuestion(currIdx)} /> */}
           <SubmitAndNextSection />
         </SectionContainer>
       </FlexCenter>

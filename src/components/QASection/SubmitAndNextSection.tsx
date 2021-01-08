@@ -6,13 +6,13 @@ import { DataContext } from "./data-context";
 const SubmitAndNextSection = () => {
   return (
     <DataContext.Consumer>
-      {({ submitAnswer }) => (
+      {({ submitAnswer, prev, next }) => (
         <SectionContainer>
           <LeftDiv>
-            <Button margin_right>
+            <Button margin_right onClick={prev}>
               <GrCaretPrevious></GrCaretPrevious>
             </Button>
-            <Button>
+            <Button onClick={next}>
               <GrCaretNext></GrCaretNext>
             </Button>
           </LeftDiv>
@@ -48,6 +48,6 @@ const Button = styled.div<{ primary?: boolean; margin_right?: boolean }>`
   font-weight: ${(props) => props.primary && 700};
   padding: 10px 15px;
   border-radius: 6px;
-  margin-right: ${(props) => props.margin_right && "10px"};
+  margin-right: ${(props) => props.margin_right && "20px"};
   cursor: pointer;
 `;

@@ -16,12 +16,13 @@ const QASectionContainer = () => {
   const [data, setData] = useState<QuizAPIDataProcessor>(
     new QuizAPIDataProcessor({})
   );
+  const [currIdx, setCurrIdx] = useState(0);
 
   useEffect(() => {
     if (data && data.currentQuestionIdx >= 18) {
       // TODO: Start fetching next sets of question
     }
-  }, [data]);
+  }, [data, data.currentQuestionIdx]);
 
   useEffect(() => {
     if (fetchData) {
@@ -34,12 +35,12 @@ const QASectionContainer = () => {
     Array<number>
   >([]); // Save the selected answer's index number
 
-  useEffect(() => {
-    console.log("New Selections idx: ");
-    console.log(currentSelectedAnswersIdx);
-    console.log("Current Correct Answers:");
-    console.log(data.currentCorrectAnswers());
-  }, [currentSelectedAnswersIdx]);
+  // useEffect(() => {
+  //   console.log("New Selections idx: ");
+  //   console.log(currentSelectedAnswersIdx);
+  //   console.log("Current Correct Answers:");
+  //   console.log(data.currentCorrectAnswers());
+  // }, [currentSelectedAnswersIdx]);
 
   function toggleSelection(idx: number) {
     setCurrentSelectedAnswersIdx((prevSelections) => {
@@ -69,6 +70,11 @@ const QASectionContainer = () => {
     let pass = true;
     const correctAnswers = data.currentCorrectAnswers();
 
+    if (currentSelectedAnswersIdx.length === 0) {
+      console.log("❌Failed!");
+      return null;
+    }
+
     for (let i = 0; i < currentSelectedAnswersIdx.length; i++) {
       if (
         correctAnswers[i] !== currentSelectedAnswersIdx[i] ||
@@ -86,6 +92,18 @@ const QASectionContainer = () => {
     return a > b ? 1 : b > a ? -1 : 0;
   }
 
+  function prevQuestion() {
+    setCurrIdx(data.IdxDecrement());
+    resetSelection();
+  }
+  function nextQuestion() {
+    setCurrIdx(data.IdxIncrement());
+    resetSelection();
+  }
+  function resetSelection() {
+    setCurrentSelectedAnswersIdx([]);
+  }
+
   return (
     <div>
       <div>
@@ -99,9 +117,11 @@ const QASectionContainer = () => {
               value={{
                 toggleSelection: toggleSelection,
                 submitAnswer: submitAnswer,
+                prev: prevQuestion,
+                next: nextQuestion,
               }}
             >
-              <QASection data={data} />
+              <QASection data={data} currIdx={currIdx} />
             </DataContext.Provider>
           </div>
         )}
