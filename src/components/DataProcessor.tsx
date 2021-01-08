@@ -25,7 +25,7 @@ class DataProcessor {
   currentAnswers() {
     return this.allAnswers[this.currentQuestionIdx];
   }
-  /** Return a Array<number> which contains the current correct answers' indexes.
+  /** Return a sorted Array<number> which contains the current correct answers' indexes.
    * Remember to use currentCorrectAnswers().length > 1 to see if it has multiple correct answers
    * Example: [0, 3] meaning the correct answers are the first and the forth answer  */
   currentCorrectAnswers() {

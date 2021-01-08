@@ -37,6 +37,8 @@ const QASectionContainer = () => {
   useEffect(() => {
     console.log("New Selections idx: ");
     console.log(currentSelectedAnswersIdx);
+    console.log("Current Correct Answers:");
+    console.log(data.currentCorrectAnswers());
   }, [currentSelectedAnswersIdx]);
 
   function toggleSelection(idx: number) {
@@ -61,6 +63,29 @@ const QASectionContainer = () => {
     return false;
   }
 
+  function submitAnswer() {
+    // Sort current selected answers
+    setCurrentSelectedAnswersIdx((currArr) => currArr.sort(sortEggsInNest)); // Will not trigger useEffect
+    let pass = true;
+    const correctAnswers = data.currentCorrectAnswers();
+
+    for (let i = 0; i < currentSelectedAnswersIdx.length; i++) {
+      if (
+        correctAnswers[i] !== currentSelectedAnswersIdx[i] ||
+        !correctAnswers[i]
+      ) {
+        pass = false;
+        console.log("❌Failed!");
+        return null;
+      }
+    }
+
+    console.log("💯Success!");
+  }
+  function sortEggsInNest(a: number, b: number) {
+    return a > b ? 1 : b > a ? -1 : 0;
+  }
+
   return (
     <div>
       <div>
@@ -70,7 +95,12 @@ const QASectionContainer = () => {
           <div>
             Loaded:
             <PrintJson data={data} />
-            <DataContext.Provider value={{ toggleSelection: toggleSelection }}>
+            <DataContext.Provider
+              value={{
+                toggleSelection: toggleSelection,
+                submitAnswer: submitAnswer,
+              }}
+            >
               <QASection data={data} />
             </DataContext.Provider>
           </div>

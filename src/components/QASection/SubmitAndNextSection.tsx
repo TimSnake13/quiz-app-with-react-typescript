@@ -1,20 +1,27 @@
 import React from "react";
 import styled from "styled-components";
 import { GrCaretPrevious, GrCaretNext } from "react-icons/gr";
+import { DataContext } from "./data-context";
 
 const SubmitAndNextSection = () => {
   return (
-    <SectionContainer>
-      <LeftDiv>
-        <Button margin_right>
-          <GrCaretPrevious></GrCaretPrevious>
-        </Button>
-        <Button>
-          <GrCaretNext></GrCaretNext>
-        </Button>
-      </LeftDiv>
-      <Button primary>Submit</Button>
-    </SectionContainer>
+    <DataContext.Consumer>
+      {({ submitAnswer }) => (
+        <SectionContainer>
+          <LeftDiv>
+            <Button margin_right>
+              <GrCaretPrevious></GrCaretPrevious>
+            </Button>
+            <Button>
+              <GrCaretNext></GrCaretNext>
+            </Button>
+          </LeftDiv>
+          <Button primary onClick={() => submitAnswer()}>
+            Submit
+          </Button>
+        </SectionContainer>
+      )}
+    </DataContext.Consumer>
   );
 };
 
