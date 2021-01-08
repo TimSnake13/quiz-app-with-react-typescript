@@ -1,11 +1,11 @@
 import React from "react";
-import QASection from "./components/QASection/QASection";
+import QASectionContainer from "./components/QASection/QASectionContainer";
 import "./App.css";
 function App() {
   return (
     <div>
       Hello App
-      <QASection />
+      <QASectionContainer />
     </div>
   );
 }

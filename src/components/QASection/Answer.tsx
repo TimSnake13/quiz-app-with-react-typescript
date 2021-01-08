@@ -47,6 +47,7 @@ const AnswerContainer = styled.div<{ clicked: boolean }>`
   align-items: center;
   position: relative;
   transition: background-color 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  min-width: 300px;
 `;
 
 const TextLabel = styled.label<{}>`
