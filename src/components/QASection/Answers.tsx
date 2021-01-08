@@ -6,17 +6,13 @@ interface Props {
 }
 
 const Answers = ({ answers }: Props) => {
-  const renderAnswers = [];
-  if (answers) {
-    for (var idx = 0; idx < answers.length; idx++) {
-      renderAnswers.push(<Answer text={answers[idx]} clickable={true} />);
-    }
-  }
-
   return (
-    <table>
-      <tbody>{renderAnswers}</tbody>
-    </table>
+    <>
+      {answers &&
+        answers.map((answer) => (
+          <Answer key={answer} text={answer} clickable={true} />
+        ))}
+    </>
   );
 };
 
