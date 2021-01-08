@@ -5,4 +5,6 @@ export const DataContext = React.createContext({
   submitAnswer: () => {},
   prev: () => {},
   next: () => {},
+  showCorrect: false,
+  currCorrect: [0],
 });

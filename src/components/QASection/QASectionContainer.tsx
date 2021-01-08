@@ -17,8 +17,14 @@ const QASectionContainer = () => {
     new QuizAPIDataProcessor({})
   );
   const [currIdx, setCurrIdx] = useState(0);
+  const [currentSelectedAnswersIdx, setCurrentSelectedAnswersIdx] = useState<
+    Array<number>
+  >([]); // Save the selected answer's index number
+  const [showCorrect, setShowCorrect] = useState(false);
+  const [currCorrect, setCurrCorrect] = useState<Array<number>>([]);
 
   useEffect(() => {
+    resetForNextQuestion();
     if (data && data.currentQuestionIdx >= 18) {
       // TODO: Start fetching next sets of question
     }
@@ -30,10 +36,6 @@ const QASectionContainer = () => {
       setData(d);
     }
   }, [fetchData]);
-
-  const [currentSelectedAnswersIdx, setCurrentSelectedAnswersIdx] = useState<
-    Array<number>
-  >([]); // Save the selected answer's index number
 
   // useEffect(() => {
   //   console.log("New Selections idx: ");
@@ -70,6 +72,9 @@ const QASectionContainer = () => {
     let pass = true;
     const correctAnswers = data.currentCorrectAnswers();
 
+    setShowCorrect(true);
+    console.log(correctAnswers);
+
     if (currentSelectedAnswersIdx.length === 0) {
       console.log("❌Failed!");
       return null;
@@ -94,14 +99,16 @@ const QASectionContainer = () => {
 
   function prevQuestion() {
     setCurrIdx(data.IdxDecrement());
-    resetSelection();
+    resetForNextQuestion();
   }
   function nextQuestion() {
     setCurrIdx(data.IdxIncrement());
-    resetSelection();
+    resetForNextQuestion();
   }
-  function resetSelection() {
+  function resetForNextQuestion() {
     setCurrentSelectedAnswersIdx([]);
+    setShowCorrect(false);
+    setCurrCorrect(data.currentCorrectAnswers());
   }
 
   return (
@@ -119,6 +126,8 @@ const QASectionContainer = () => {
                 submitAnswer: submitAnswer,
                 prev: prevQuestion,
                 next: nextQuestion,
+                showCorrect: showCorrect,
+                currCorrect: currCorrect,
               }}
             >
               <QASection data={data} currIdx={currIdx} />

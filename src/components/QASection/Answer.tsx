@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { GrCheckboxSelected, GrCheckbox } from "react-icons/gr";
+import { FcCheckmark, FcCancel } from "react-icons/fc";
 import { DataContext } from "./data-context";
 
 interface Props {
@@ -14,7 +15,7 @@ const Answer = ({ text, clickable, idx }: Props) => {
 
   return (
     <DataContext.Consumer>
-      {({ toggleSelection }) => (
+      {({ toggleSelection, showCorrect, currCorrect }) => (
         <AnswerContainer clicked={clicked}>
           {clicked ? <GrCheckboxSelected /> : <GrCheckbox />}
           <TextLabel className="answer-text">{text}</TextLabel>
@@ -24,7 +25,14 @@ const Answer = ({ text, clickable, idx }: Props) => {
               setClicked((currClicked) => !currClicked);
               toggleSelection(idx);
             }}
-          ></ClickableDiv>
+          >
+            {showCorrect &&
+              (currCorrect.includes(idx) ? (
+                <FcCheckmark />
+              ) : (
+                clicked && <FcCancel />
+              ))}
+          </ClickableDiv>
         </AnswerContainer>
       )}
     </DataContext.Consumer>
