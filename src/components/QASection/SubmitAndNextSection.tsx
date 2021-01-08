@@ -1,15 +1,20 @@
 import React from "react";
 import styled from "styled-components";
+import { GrCaretPrevious, GrCaretNext } from "react-icons/gr";
 
 const SubmitAndNextSection = () => {
   return (
-    <div className="test">
-      <div>
-        <Button></Button>
-        <Button></Button>
-      </div>
-      <Button></Button>
-    </div>
+    <SectionContainer>
+      <LeftDiv>
+        <Button margin_right>
+          <GrCaretPrevious></GrCaretPrevious>
+        </Button>
+        <Button>
+          <GrCaretNext></GrCaretNext>
+        </Button>
+      </LeftDiv>
+      <Button primary>Submit</Button>
+    </SectionContainer>
   );
 };
 
@@ -17,9 +22,25 @@ export default SubmitAndNextSection;
 
 const SectionContainer = styled.div<{}>`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: 30px;
 `;
 
-const Button = styled.button<{}>``;
+const LeftDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Button = styled.div<{ primary?: boolean; margin_right?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  font-weight: ${(props) => props.primary && 700};
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-right: ${(props) => props.margin_right && "10px"};
+  cursor: pointer;
+`;

@@ -10,7 +10,9 @@ const Question = ({ text }: Props) => {
 };
 
 const TitleText = styled.h3`
-  max-width: 600px;
+  max-width: 800px;
+  margin-bottom: 30px;
+  line-height: 150%;
 `;
 
 export default Question;

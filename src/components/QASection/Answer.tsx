@@ -10,18 +10,14 @@ interface Props {
 const Answer = ({ text, clickable }: Props) => {
   const [clicked, setClicked] = React.useState(false);
   return (
-    <tr>
-      <td>
-        <AnswerContainer clicked={clicked}>
-          {clicked ? <GrCheckboxSelected /> : <GrCheckbox />}
-          <TextLabel className="answer-text">{text}</TextLabel>
-          <ClickableDiv
-            clickable={clickable}
-            onClick={() => setClicked(!clicked)}
-          ></ClickableDiv>
-        </AnswerContainer>
-      </td>
-    </tr>
+    <AnswerContainer clicked={clicked}>
+      {clicked ? <GrCheckboxSelected /> : <GrCheckbox />}
+      <TextLabel className="answer-text">{text}</TextLabel>
+      <ClickableDiv
+        clickable={clickable}
+        onClick={() => setClicked((currClicked) => !currClicked)}
+      ></ClickableDiv>
+    </AnswerContainer>
   );
 };
 
@@ -41,7 +37,7 @@ const AnswerContainer = styled.div<{ clicked: boolean }>`
   background-color: ${(props) => (props.clicked ? "#C7D2FE" : "#E0E7FF")};
   border-radius: 4px;
   padding: 10px 20px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

@@ -29,7 +29,7 @@ const FlexCenter = styled.div`
 const SectionContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
   min-height: 80vh;
   max-width: 60vw;
