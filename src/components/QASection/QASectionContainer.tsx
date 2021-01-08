@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useFetch } from "../useFetch";
 import { QuizAPIDataProcessor } from "../DataProcessor";
 import QASection from "./QASection";
 import PrintJson from "./PrintJson";
+import { DataContext } from "./data-context";
 
 const QASectionContainer = () => {
   const { fetchData, loading } = useFetch({
@@ -30,9 +30,36 @@ const QASectionContainer = () => {
     }
   }, [fetchData]);
 
-  const [{ currentSelectedAnswers }, setCurrentSelectedAnswers] = useState({
-    currentSelectedAnswers: [],
-  });
+  const [currentSelectedAnswersIdx, setCurrentSelectedAnswersIdx] = useState<
+    Array<number>
+  >([]); // Save the selected answer's index number
+
+  useEffect(() => {
+    console.log("New Selections idx: ");
+    console.log(currentSelectedAnswersIdx);
+  }, [currentSelectedAnswersIdx]);
+
+  function toggleSelection(idx: number) {
+    setCurrentSelectedAnswersIdx((prevSelections) => {
+      const arr: number[] = prevSelections;
+      if (containsNum(arr, idx)) {
+        // remove it
+        return arr.filter((el) => el !== idx);
+      } else {
+        return [...prevSelections, idx];
+      }
+    });
+  }
+
+  function containsNum(a: number[], obj: number) {
+    var i = a.length;
+    while (i--) {
+      if (a[i] === obj) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   return (
     <div>
@@ -43,7 +70,9 @@ const QASectionContainer = () => {
           <div>
             Loaded:
             <PrintJson data={data} />
-            <QASection data={data} />
+            <DataContext.Provider value={{ toggleSelection: toggleSelection }}>
+              <QASection data={data} />
+            </DataContext.Provider>
           </div>
         )}
       </div>

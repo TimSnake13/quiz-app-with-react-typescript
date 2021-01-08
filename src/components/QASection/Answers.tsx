@@ -6,11 +6,13 @@ interface Props {
 }
 
 const Answers = ({ answers }: Props) => {
+  let count = 0;
+
   return (
     <>
       {answers &&
         answers.map((answer) => (
-          <Answer key={answer} text={answer} clickable={true} />
+          <Answer key={answer} text={answer} clickable={true} idx={count++} />
         ))}
     </>
   );

@@ -1,23 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 import { GrCheckboxSelected, GrCheckbox } from "react-icons/gr";
+import { DataContext } from "./data-context";
 
 interface Props {
   text: string;
   clickable: boolean;
+  idx: number;
 }
 
-const Answer = ({ text, clickable }: Props) => {
+const Answer = ({ text, clickable, idx }: Props) => {
   const [clicked, setClicked] = React.useState(false);
+
   return (
-    <AnswerContainer clicked={clicked}>
-      {clicked ? <GrCheckboxSelected /> : <GrCheckbox />}
-      <TextLabel className="answer-text">{text}</TextLabel>
-      <ClickableDiv
-        clickable={clickable}
-        onClick={() => setClicked((currClicked) => !currClicked)}
-      ></ClickableDiv>
-    </AnswerContainer>
+    <DataContext.Consumer>
+      {({ toggleSelection }) => (
+        <AnswerContainer clicked={clicked}>
+          {clicked ? <GrCheckboxSelected /> : <GrCheckbox />}
+          <TextLabel className="answer-text">{text}</TextLabel>
+          <ClickableDiv
+            clickable={clickable}
+            onClick={() => {
+              setClicked((currClicked) => !currClicked);
+              toggleSelection(idx);
+            }}
+          ></ClickableDiv>
+        </AnswerContainer>
+      )}
+    </DataContext.Consumer>
   );
 };
 
