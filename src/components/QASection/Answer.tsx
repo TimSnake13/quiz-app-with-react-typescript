@@ -36,7 +36,7 @@ const ClickableDiv = styled.div<{ clickable: boolean }>`
 const AnswerContainer = styled.div<{ clicked: boolean }>`
   background-color: ${(props) => (props.clicked ? "#C7D2FE" : "#E0E7FF")};
   border-radius: 4px;
-  padding: 10px 20px;
+  padding: 20px 20px;
   margin-bottom: 16px;
   display: flex;
   justify-content: flex-start;
@@ -49,4 +49,5 @@ const AnswerContainer = styled.div<{ clicked: boolean }>`
 const TextLabel = styled.label<{}>`
   margin-left: 10px;
   max-width: 300px;
+  line-height: 1;
 `;
